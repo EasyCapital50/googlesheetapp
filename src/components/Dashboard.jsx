@@ -68,7 +68,7 @@ function Dashboard({ onLogout }) {
             </button>
 
             <h2 className="text-2xl font-bold mb-6">
-                Welcome, {user.username} <span className="text-gray-500">({user.role})</span>
+                Welcome. {user.username} <span className="text-gray-500">({user.role})</span>
             </h2>
 
             <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />

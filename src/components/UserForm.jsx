@@ -1,26 +1,38 @@
 import { useState } from 'react';
 
-function UserForm({ apiUrl, username }) {
-    const [newUser, setNewUser] = useState({ username: '', password: '', role: 'user' });
+function UserForm({ apiUrl, token }) {
+    const [newUser, setNewUser] = useState({
+        name: '',
+        username: '',
+        password: '',
+        role: 'user'
+    });
+
+    const [showPassword, setShowPassword] = useState(false);
 
     const handleChange = (e) => {
         setNewUser({ ...newUser, [e.target.name]: e.target.value });
     };
 
     const handleAddUser = () => {
-        fetch(apiUrl, {
+        fetch(`${apiUrl}`, {
             method: 'POST',
-            body: JSON.stringify({
-                action: 'addUser',
-                user: newUser,
-                addedBy: username
-            })
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify(newUser)
         })
             .then(res => res.json())
-            .then(() => {
-                alert('User added!');
-                window.location.reload();
-            });
+            .then(res => {
+                if (res.message) {
+                    alert(res.message);
+                } else {
+                    alert('User added!');
+                    window.location.reload();
+                }
+            })
+            .catch(err => alert('Error adding user: ' + err.message));
     };
 
     return (
@@ -28,19 +40,36 @@ function UserForm({ apiUrl, username }) {
             <h3 className="text-lg font-semibold mb-4">Add New User</h3>
             <div className="flex flex-col md:flex-row gap-3 mb-4">
                 <input
+                    name="name"
+                    placeholder="Name"
+                    value={newUser.name}
+                    onChange={handleChange}
+                    className="border rounded px-3 py-2 text-sm flex-1"
+                />
+                <input
                     name="username"
                     placeholder="Username"
                     value={newUser.username}
                     onChange={handleChange}
                     className="border rounded px-3 py-2 text-sm flex-1"
                 />
-                <input
-                    name="password"
-                    placeholder="Password"
-                    value={newUser.password}
-                    onChange={handleChange}
-                    className="border rounded px-3 py-2 text-sm flex-1"
-                />
+                <div className="relative flex-1">
+                    <input
+                        type={showPassword ? 'text' : 'password'}
+                        name="password"
+                        placeholder="Password"
+                        value={newUser.password}
+                        onChange={handleChange}
+                        className="border rounded px-3 py-2 text-sm w-full"
+                    />
+                    <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-2 top-1/2 transform -translate-y-1/2 text-xs text-blue-600"
+                    >
+                        {showPassword ? 'Hide' : 'Show'}
+                    </button>
+                </div>
                 <select
                     name="role"
                     value={newUser.role}

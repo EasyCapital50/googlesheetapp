@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const API_URL = 'http://localhost:5000/users/login'; // Replace with your actual backend URL
+const API_URL = 'http://148.135.136.92:5000/users/login'; 
 
 function Login({ onLogin }) {
   const [username, setUsername] = useState('');

@@ -6,7 +6,7 @@ import AddEntryForm from './AddEntryForm';
 import UserForm from './UserForm';
 import UserTable from './UserTable';
 
-const API_URL = 'http://localhost:5000';
+const API_URL = 'http://148.135.136.92:5000';
 
 function Dashboard({ onLogout }) {
     const navigate = useNavigate();

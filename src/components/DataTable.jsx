@@ -3,6 +3,7 @@ const labelMap = {
   customerName: "Customer Name",
   mobile: "Mobile",
   place: "Place",
+  bank: "Bank",
   to: "T/o",
   appDate: "App Date",
   status: "Status",
@@ -90,5 +91,6 @@ function DataTable({ data, searchTerm, user, apiUrl, token }) {
     </div>
   );
 }
+
 
 export default DataTable;

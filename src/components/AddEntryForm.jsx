@@ -5,13 +5,14 @@ const labelMap = {
   customerName: "Customer Name",
   mobile: "Mobile",
   place: "Place",
+  bank: "Bank", // ✅ NEW field label
   to: "T/o",
   appDate: "App Date",
   status: "Status",
   remarks: "Remarks",
 };
 
-function AddEntryForm({ dataHeaders, apiUrl,token }) {
+function AddEntryForm({ dataHeaders, apiUrl, token }) {
     const [newEntry, setNewEntry] = useState({});
 
     const handleChange = (e) => {
@@ -48,17 +49,17 @@ function AddEntryForm({ dataHeaders, apiUrl,token }) {
         <div className="bg-white shadow rounded p-4 mb-10">
             <h3 className="text-lg font-semibold mb-4">Add New Entry</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-4">
-{dataHeaders
-    .filter(field => !['_id', '__v', 'createdAt', 'updatedAt'].includes(field))
-    .map(field => (
-                    <input
-                        key={field}
-                        name={field}
-                        placeholder={labelMap[field] || field}
-                        onChange={handleChange}
-                        className="border rounded px-3 py-2 text-sm"
-                    />
-                ))}
+                {dataHeaders
+                    .filter(field => !['_id', '__v', 'createdAt', 'updatedAt'].includes(field))
+                    .map(field => (
+                        <input
+                            key={field}
+                            name={field}
+                            placeholder={labelMap[field] || field}
+                            onChange={handleChange}
+                            className="border rounded px-3 py-2 text-sm"
+                        />
+                    ))}
             </div>
             <button
                 onClick={handleAddContent}

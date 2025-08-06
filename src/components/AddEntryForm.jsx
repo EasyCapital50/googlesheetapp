@@ -10,6 +10,8 @@ const labelMap = {
   appDate: "App Date",
   status: "Status",
   remarks: "Remarks",
+natureOfBsns: "Nature of Business",     // ✅ Add this
+  styleOfBsns: "Style of Business",       // ✅ And this
 };
 
 function AddEntryForm({ dataHeaders, apiUrl, token, onSuccess }) {

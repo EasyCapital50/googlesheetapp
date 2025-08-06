@@ -177,7 +177,11 @@ function Dashboard({ onLogout }) {
 
                 {(user.role === 'staff' || user.role === 'superadmin') && (
                     <AddEntryForm
-                        dataHeaders={data[0] ? Object.keys(data[0]) : []}
+dataHeaders={
+  data[0]
+    ? Array.from(new Set([...Object.keys(data[0]), "natureOfBsns", "styleOfBsns"]))
+    : ["companyName", "customerName", "mobile", "place", "bank", "to", "appDate", "status", "remarks", "natureOfBsns", "styleOfBsns"]
+}
                         apiUrl={API_URL}
                         token={user.token}
                         onSuccess={() => {

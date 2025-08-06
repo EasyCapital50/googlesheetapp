@@ -10,7 +10,10 @@ const labelMap = {
   appDate: "App Date",
   status: "Status",
   remarks: "Remarks",
+  natureOfBsns: "Nature of Business",   // ✅ Add this
+  styleOfBsns: "Style of Business",     // ✅ Add this
 };
+
 
 function DataTable({ data, searchTerm, user, apiUrl, token, onDeleteSuccess, onEditSuccess }) {
   const excludedFields = ['_id', '__v', 'createdAt', 'updatedAt'];
@@ -18,20 +21,20 @@ function DataTable({ data, searchTerm, user, apiUrl, token, onDeleteSuccess, onE
   const [editingRow, setEditingRow] = useState(null);
   const [editValues, setEditValues] = useState({});
 
-const filteredData = data.filter(row =>
-  Object.values(row).some(val =>
-    val?.toString().toLowerCase().includes(searchTerm.toLowerCase())
-  )
-);
+  const filteredData = data.filter(row =>
+    Object.values(row).some(val =>
+      val?.toString().toLowerCase().includes(searchTerm.toLowerCase())
+    )
+  );
 
-// Show table only:
-// - If superadmin: always show
-// - If staff/user: only show if search has results
-const shouldShowTable =
-  user.role === 'superadmin' ||
-  (searchTerm.trim().length > 0 && filteredData.length > 0);
+  // Show table only:
+  // - If superadmin: always show
+  // - If staff/user: only show if search has results
+  const shouldShowTable =
+    user.role === 'superadmin' ||
+    (searchTerm.trim().length > 0 && filteredData.length > 0);
 
-if (!shouldShowTable) return null;
+  if (!shouldShowTable) return null;
 
 
 
@@ -100,7 +103,7 @@ if (!shouldShowTable) return null;
         <thead className="bg-green-600 text-white">
           <tr>
             {data[0] &&
-              Object.keys(data[0])
+Object.keys(labelMap)
                 .filter(key => !excludedFields.includes(key) && key !== 'createdBy')
                 .map((key, i) => (
                   <th key={i} className="px-4 py-2 border">
@@ -121,21 +124,21 @@ if (!shouldShowTable) return null;
           {filteredData.map((row, i) => (
             <tr key={i} className="even:bg-gray-100">
               {Object.keys(labelMap).map((key, j) => (
-  <td key={j} className="px-3 py-2 border">
-    {editingRow === row._id ? (
-      <input
-        type="text"
-        name={key}
-        value={editValues[key] || ''}
-        onChange={handleEditChange}
-        className="border px-2 py-1 rounded w-full"
-      />
-    ) : (
-      row[key] || '—'  // fallback for missing values
-    )}
-  </td>
-))
-}
+                <td key={j} className="px-3 py-2 border">
+                  {editingRow === row._id ? (
+                    <input
+                      type="text"
+                      name={key}
+                      value={editValues[key] || ''}
+                      onChange={handleEditChange}
+                      className="border px-2 py-1 rounded w-full"
+                    />
+                  ) : (
+                    row[key] || '—'  // fallback for missing values
+                  )}
+                </td>
+              ))
+              }
 
               {/* Show Created By */}
               {user.role === 'superadmin' && (

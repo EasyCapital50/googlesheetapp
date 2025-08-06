@@ -57,7 +57,7 @@ function AddEntryForm({ dataHeaders, apiUrl, token, onSuccess }) {
             <h3 className="text-lg font-semibold mb-4">Add New Entry</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-4">
                 {dataHeaders
-                    .filter(field => !['_id', '__v', 'createdAt', 'updatedAt'].includes(field))
+                    .filter(field => !['_id', '__v', 'createdAt', 'updatedAt', 'createdBy'].includes(field))
                     .map(field => (
                         <input
                             key={field}

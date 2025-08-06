@@ -6,7 +6,7 @@ import AddEntryForm from './AddEntryForm';
 import UserForm from './UserForm';
 import UserTable from './UserTable';
 
-const API_URL = 'https://api.easycapitalsolution.com';
+const API_URL = 'https://api.easycapitalsolution.com'; // Update with your actual API URL
 
 function Dashboard({ onLogout }) {
     const navigate = useNavigate();
@@ -88,6 +88,21 @@ function Dashboard({ onLogout }) {
         }
     };
 
+    const refreshData = () => {
+        fetch(`${API_URL}/records/get`, {
+            headers: { Authorization: `Bearer ${user.token}` },
+        })
+            .then(res => res.json())
+            .then(json => {
+                if (Array.isArray(json)) {
+                    setData(json);
+                } else if (Array.isArray(json.data)) {
+                    setData(json.data);
+                }
+            });
+    };
+
+
     const handleForceLogout = () => {
         localStorage.clear();
         onLogout();
@@ -153,20 +168,10 @@ function Dashboard({ onLogout }) {
                         user={user}
                         apiUrl={`${API_URL}/records`}
                         token={user.token}
-                        onDeleteSuccess={() => {
-                            fetch(`${API_URL}/records/get`, {
-                                headers: { Authorization: `Bearer ${user.token}` },
-                            })
-                                .then(res => res.json())
-                                .then(json => {
-                                    if (Array.isArray(json)) {
-                                        setData(json);
-                                    } else if (Array.isArray(json.data)) {
-                                        setData(json.data);
-                                    }
-                                });
-                        }}
+                        onDeleteSuccess={refreshData}
+                        onEditSuccess={refreshData}
                     />
+
 
                 )}
 
@@ -177,18 +182,26 @@ function Dashboard({ onLogout }) {
                         token={user.token}
                         onSuccess={() => {
                             fetch(`${API_URL}/records/get`, {
-                                headers: { Authorization: `Bearer ${user.token}` },
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'Authorization': `Bearer ${user.token}`,
+                                },
                             })
                                 .then(res => res.json())
                                 .then(json => {
                                     if (Array.isArray(json)) {
-                                        setData(json);
-                                    } else if (Array.isArray(json.data)) {
-                                        setData(json.data);
+                                        setData(json); // superadmin or regular user will get appropriate data
+                                    } else {
+                                        alert("Unexpected response");
                                     }
+                                })
+                                .catch((err) => {
+                                    console.error("❌ Failed to fetch updated records:", err);
+                                    alert("Failed to refresh records");
                                 });
                         }}
                     />
+
                 )}
 
                 {user.role === 'superadmin' && (

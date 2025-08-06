@@ -10,8 +10,8 @@ const labelMap = {
   appDate: "App Date",
   status: "Status",
   remarks: "Remarks",
-  natureOfBsns: "Nature of Business",   // ✅ Add this
-  styleOfBsns: "Style of Business",     // ✅ Add this
+  natureOfBsns: "Nature of Bsns",   // ✅ Add this
+  styleOfBsns: "Style of Bsns",     // ✅ Add this
 };
 
 

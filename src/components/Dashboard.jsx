@@ -153,7 +153,21 @@ function Dashboard({ onLogout }) {
                         user={user}
                         apiUrl={`${API_URL}/records`}
                         token={user.token}
+                        onDeleteSuccess={() => {
+                            fetch(`${API_URL}/records/get`, {
+                                headers: { Authorization: `Bearer ${user.token}` },
+                            })
+                                .then(res => res.json())
+                                .then(json => {
+                                    if (Array.isArray(json)) {
+                                        setData(json);
+                                    } else if (Array.isArray(json.data)) {
+                                        setData(json.data);
+                                    }
+                                });
+                        }}
                     />
+
                 )}
 
                 {(user.role === 'staff' || user.role === 'superadmin') && (

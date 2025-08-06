@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-function UserForm({ apiUrl, token }) {
+function UserForm({ apiUrl, token, onSuccess }) {
     const [newUser, setNewUser] = useState({
         name: '',
         username: '',
@@ -15,7 +15,7 @@ function UserForm({ apiUrl, token }) {
     };
 
     const handleAddUser = () => {
-        fetch(`${apiUrl}`, {
+        fetch(apiUrl, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -29,7 +29,15 @@ function UserForm({ apiUrl, token }) {
                     alert(res.message);
                 } else {
                     alert('User added!');
-                    window.location.reload();
+                    if (typeof onSuccess === 'function') {
+                        onSuccess(); // <-- call fetchUsers or any callback
+                    }
+                    setNewUser({
+                        name: '',
+                        username: '',
+                        password: '',
+                        role: 'user'
+                    });
                 }
             })
             .catch(err => alert('Error adding user: ' + err.message));

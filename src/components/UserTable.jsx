@@ -20,45 +20,48 @@ function UserTable({ users = [], setUsers, apiUrl, token, onUserUpdate }) {
     };
 
     const handleUpdate = async (user) => {
-        if (!user.username || !user.role) {
-            setError('Username and role are required');
-            return;
+    if (!user.username || !user.role) {
+        setError('Username and role are required');
+        return;
+    }
+
+    const confirmed = window.confirm(`Are you sure you want to save changes for "${user.username}"?`);
+    if (!confirmed) return;
+
+    setLoading(true);
+    setError(null);
+
+    try {
+        const response = await fetch(`${apiUrl}/users/edit/${user._id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+                username: user.username,
+                password: user.password || undefined,
+                role: user.role,
+            }),
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Failed to update user');
         }
 
-        const confirmed = window.confirm(`Are you sure you want to save changes for "${user.username}"?`);
-        if (!confirmed) return;
-
-        setLoading(true);
-        setError(null);
-
-        try {
-            const response = await fetch(`${apiUrl}/users/edit/${user._id}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`,
-                },
-                body: JSON.stringify({
-                    username: user.username,
-                    password: user.password || undefined,
-                    role: user.role,
-                }),
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || 'Failed to update user');
-            }
-
-            // ✅ Optional: reload the page after update
-            window.location.reload();
-        } catch (err) {
-            console.error("Update error:", err);
-            setError(err.message);
-        } finally {
-            setLoading(false);
+        alert('User updated!');
+        if (typeof onUserUpdate === 'function') {
+            onUserUpdate(); // ✅ Refresh user list without reload
         }
-    };
+    } catch (err) {
+        console.error("Update error:", err);
+        setError(err.message);
+    } finally {
+        setLoading(false);
+    }
+};
+
 
     const handleDelete = async (id) => {
         if (!window.confirm('Are you sure you want to delete this user?')) return;

@@ -11,8 +11,7 @@ const labelMap = {
 };
 
 
-function DataTable({ data, searchTerm, user, apiUrl, token }) {
-  const excludedFields = ['_id', '__v', 'createdAt', 'updatedAt'];
+function DataTable({ data, searchTerm, user, apiUrl, token, onDeleteSuccess }) {  const excludedFields = ['_id', '__v', 'createdAt', 'updatedAt'];
 
   const filteredData = data.filter(row =>
     Object.values(row).some(val =>
@@ -26,22 +25,24 @@ function DataTable({ data, searchTerm, user, apiUrl, token }) {
   if (!shouldShowTable) return null;
 
   const handleDeleteRow = (id) => {
-    if (!window.confirm(`Are you sure you want to delete this record?`)) return;
+  if (!window.confirm(`Are you sure you want to delete this record?`)) return;
 
-    fetch(`${apiUrl}/${id}`, {
-      method: 'DELETE',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
+  fetch(`${apiUrl}/${id}`, {
+    method: 'DELETE',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+  })
+    .then(res => res.json())
+    .then(res => {
+      alert(res.message || "Deleted");
+      // ✅ Call parent to re-fetch
+      if (onDeleteSuccess) onDeleteSuccess();
     })
-      .then(res => res.json())
-      .then(res => {
-        alert(res.message || "Deleted");
-        window.location.reload(); // Or trigger a re-fetch
-      })
-      .catch(() => alert("Delete failed"));
-  };
+    .catch(() => alert("Delete failed"));
+};
+
 
   return (
     <div className="overflow-x-auto shadow rounded mb-8">

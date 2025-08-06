@@ -5,14 +5,14 @@ const labelMap = {
   customerName: "Customer Name",
   mobile: "Mobile",
   place: "Place",
-  bank: "Bank", // ✅ NEW field label
+  bank: "Bank",
   to: "T/o",
   appDate: "App Date",
   status: "Status",
   remarks: "Remarks",
 };
 
-function AddEntryForm({ dataHeaders, apiUrl, token }) {
+function AddEntryForm({ dataHeaders, apiUrl, token, onSuccess }) {
     const [newEntry, setNewEntry] = useState({});
 
     const handleChange = (e) => {
@@ -38,7 +38,14 @@ function AddEntryForm({ dataHeaders, apiUrl, token }) {
 
             const created = await res.json();
             console.log("✅ Record created:", created);
-            window.location.reload();
+
+            // ✅ Call onSuccess to trigger re-fetch in parent
+            if (onSuccess) {
+                onSuccess();
+            }
+
+            // Optional: Clear the form
+            setNewEntry({});
         } catch (error) {
             console.error("❌ Failed to add entry:", error);
             alert("Something went wrong. Try again.");
@@ -55,6 +62,7 @@ function AddEntryForm({ dataHeaders, apiUrl, token }) {
                         <input
                             key={field}
                             name={field}
+                            value={newEntry[field] || ""}
                             placeholder={labelMap[field] || field}
                             onChange={handleChange}
                             className="border rounded px-3 py-2 text-sm"

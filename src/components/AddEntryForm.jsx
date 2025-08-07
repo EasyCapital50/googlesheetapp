@@ -17,6 +17,15 @@ natureOfBsns: "Nature of Business",     // ✅ Add this
 function AddEntryForm({ dataHeaders, apiUrl, token, onSuccess }) {
     const [newEntry, setNewEntry] = useState({});
 
+    const requiredFields = [
+        "companyName", "customerName", "mobile", "place", "bank",
+        "to", "appDate", "status", "remarks", "natureOfBsns", "styleOfBsns"
+    ];
+
+    const combinedFields = Array.from(
+        new Set([...dataHeaders, ...requiredFields])
+    ).filter(field => !['_id', '__v', 'createdAt', 'updatedAt', 'createdBy'].includes(field));
+
     const handleChange = (e) => {
         setNewEntry({ ...newEntry, [e.target.name]: e.target.value });
     };
@@ -41,12 +50,10 @@ function AddEntryForm({ dataHeaders, apiUrl, token, onSuccess }) {
             const created = await res.json();
             console.log("✅ Record created:", created);
 
-            // ✅ Call onSuccess to trigger re-fetch in parent
             if (onSuccess) {
                 onSuccess();
             }
 
-            // Optional: Clear the form
             setNewEntry({});
         } catch (error) {
             console.error("❌ Failed to add entry:", error);
@@ -58,18 +65,16 @@ function AddEntryForm({ dataHeaders, apiUrl, token, onSuccess }) {
         <div className="bg-white shadow rounded p-4 mb-10">
             <h3 className="text-lg font-semibold mb-4">Add New Entry</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-4">
-                {dataHeaders
-                    .filter(field => !['_id', '__v', 'createdAt', 'updatedAt', 'createdBy'].includes(field))
-                    .map(field => (
-                        <input
-                            key={field}
-                            name={field}
-                            value={newEntry[field] || ""}
-                            placeholder={labelMap[field] || field}
-                            onChange={handleChange}
-                            className="border rounded px-3 py-2 text-sm"
-                        />
-                    ))}
+                {combinedFields.map(field => (
+                    <input
+                        key={field}
+                        name={field}
+                        value={newEntry[field] || ""}
+                        placeholder={labelMap[field] || field}
+                        onChange={handleChange}
+                        className="border rounded px-3 py-2 text-sm"
+                    />
+                ))}
             </div>
             <button
                 onClick={handleAddContent}
@@ -80,5 +85,6 @@ function AddEntryForm({ dataHeaders, apiUrl, token, onSuccess }) {
         </div>
     );
 }
+
 
 export default AddEntryForm;

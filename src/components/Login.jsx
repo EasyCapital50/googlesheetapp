@@ -36,7 +36,11 @@ function Login({ onLogin }) {
         localStorage.setItem('username', data.user.name);
         localStorage.setItem('role', data.user.role);
         onLogin(data.user.name, data.user.role, data.token);
-        navigate('/dashboard');
+if (data.user.role === "mainadmin") {
+    navigate('/main-admin');
+  } else {
+    navigate('/dashboard');
+  }
       }
     } catch (err) {
       console.error("Login error:", err);

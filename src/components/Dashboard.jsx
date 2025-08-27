@@ -6,7 +6,7 @@ import AddEntryForm from './AddEntryForm';
 import UserForm from './UserForm';
 import UserTable from './UserTable';
 
-const API_URL = 'https://api.easycapitalsolution.com'; // Update with your actual API URL
+const API_URL = 'https://api.easycapitalsolution.com';
 
 function Dashboard({ onLogout }) {
     const navigate = useNavigate();
